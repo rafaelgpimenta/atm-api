@@ -6,4 +6,9 @@ Rails.application.routes.draw do
     resources :customers
     resources :transactions
   end
+
+  post 'sign_up', to: 'auth#sign_up'
+  post 'sign_in', to: 'auth#sign_in'
+  post 'sign_out', to: 'auth#sign_out'
+  post 'refresh', to: 'auth#refresh'
 end
