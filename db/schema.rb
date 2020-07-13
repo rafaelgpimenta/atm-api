@@ -10,11 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_13_142742) do
+ActiveRecord::Schema.define(version: 2020_07_13_151035) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "customer_id", null: false
+    t.integer "type"
+    t.decimal "balance"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["customer_id"], name: "index_accounts_on_customer_id"
+  end
 
   create_table "customers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "cpf", null: false
@@ -24,4 +33,5 @@ ActiveRecord::Schema.define(version: 2020_07_13_142742) do
     t.index ["cpf"], name: "index_customers_on_cpf", unique: true
   end
 
+  add_foreign_key "accounts", "customers"
 end
