@@ -1,0 +1,1 @@
+class SavingAccount < Account; end

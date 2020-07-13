@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(version: 2020_07_13_152243) do
 
   create_table "accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "customer_id", null: false
-    t.integer "type"
-    t.decimal "balance"
+    t.string "type", null: false
+    t.decimal "balance", default: "0.0", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["customer_id"], name: "index_accounts_on_customer_id"
