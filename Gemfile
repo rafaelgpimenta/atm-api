@@ -30,8 +30,7 @@ group :development, :test do
   gem 'dotenv-rails', '~> 2.7.6'
   gem 'rspec-rails', '~> 4.0.1'
   gem 'factory_bot_rails', '~> 6.1.0'
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'pry', '~> 0.13.1'
 end
 
 group :development do
