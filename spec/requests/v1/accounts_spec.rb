@@ -15,20 +15,15 @@ require 'rails_helper'
 RSpec.describe "/accounts", type: :request do
   describe "GET #my" do
     let!(:account) { create(:account) }
-    let(:tokens) do
-      payload = { customer_id: account.customer.id }
-      session = JWTSessions::Session.new(payload: payload, refresh_by_access_allowed: true)
-      session.login
-    end
+    let(:tokens) { login(account.customer) }
 
     it "renders a successful response" do
-      header = { JWTSessions.access_header => "Bearer #{tokens[:access]}" }
-      get my_v1_accounts_url, as: :json, headers: header
+      get my_v1_accounts_url, as: :json, headers: auth_header(tokens[:access])
 
       body = JSON.parse(response.body).with_indifferent_access
 
       expect(response).to be_successful
-      expect(response.content_type).to eq("application/json; charset=utf-8")
+      expect(response.content_type).to match(a_string_including("application/json"))
       expect(body).to include({
         id: account.id, customer_id: account.customer.id,
         balance: '0.0',
@@ -37,12 +32,12 @@ RSpec.describe "/accounts", type: :request do
     end
 
     it "renders an unauthorized response" do
-      header = { JWTSessions.access_header => "Bearer #{tokens[:access][0...-1]}" }
-      get my_v1_accounts_url, as: :json, headers: header
+      invalid_key = tokens[:access][0...-1]
+      get my_v1_accounts_url, as: :json, headers: auth_header(invalid_key)
       body = JSON.parse(response.body).with_indifferent_access
 
       expect(response).to have_http_status(:unauthorized)
-      expect(response.content_type).to eq("application/json; charset=utf-8")
+      expect(response.content_type).to match(a_string_including("application/json"))
       expect(response.body).to eq("{\"error\":\"Not authorized\"}")
     end
   end

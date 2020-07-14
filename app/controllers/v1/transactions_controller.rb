@@ -5,7 +5,7 @@ class V1::TransactionsController < ApplicationController
   # GET /transactions
   def index
     # TODO: pagination
-    @transactions = account.transactions
+    @transactions = current_customer.transactions
 
     render json: @transactions
   end
@@ -17,11 +17,11 @@ class V1::TransactionsController < ApplicationController
 
   # POST /transactions
   def create
-    @transaction = account.transactions.build(transaction_params)
+    @transaction = current_customer.transactions.build(transaction_params)
     valid_operation = false
     ActiveRecord::Base.transaction do
       valid_operation = @transaction.save &&
-        account.update_balance_with_transaction(@transaction.id)
+        current_customer.account.update_balance_with_transaction(@transaction.id)
 
       raise ActiveRecord::Rollback unless valid_operation
     end
@@ -35,13 +35,9 @@ class V1::TransactionsController < ApplicationController
 
   private
 
-  def account
-    @account ||= current_customer.account
-  end
-
   # Use callbacks to share common setup or constraints between actions.
   def set_transaction
-    @transaction = account.transactions.find(params[:id])
+    @transaction = current_customer.transactions.find(params[:id])
   end
 
   # Only allow a trusted parameter "white list" through.

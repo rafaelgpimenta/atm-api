@@ -16,50 +16,74 @@ RSpec.describe "/transactions", type: :request do
   # This should return the minimal set of attributes required to create a valid
   # Transaction. As you add validations to Transaction, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
-  }
+  let(:valid_withdraw_attributes) { attributes_for :transaction }
+  let(:valid_deposit_attributes) { attributes_for :transaction, :deposit }
 
-  let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
-  }
-
-  # This should return the minimal set of values that should be in the headers
-  # in order to pass any filters (e.g. authentication) defined in
-  # V1::TransactionsController, or in your router and rack
-  # middleware. Be sure to keep this updated too.
-  let(:valid_headers) {
-    {}
-  }
+  let(:invalid_attributes) { attributes_for :transaction, amount: 11 }
 
   describe "GET /index" do
+    let(:customer_1) { create(:customer, cpf: '456') } # logged user
+    let(:customer_2) { create(:customer, cpf: '123') }
+    let(:account_1) { create(:account, :saving, customer: customer_1) }
+    let(:account_2) { create(:account, customer: customer_2) }
+    let!(:transaction_deposit) { create(:transaction, :deposit, account: account_1) }
+    let!(:transactions_withdraw) { create_list(:transaction, 2, account: account_1) }
+    let!(:transactions_2) { create_list(:transaction, 2, account: account_2) }
+    let(:tokens) { login(account_1.customer) }
+
     it "renders a successful response" do
-      Transaction.create! valid_attributes
-      get v1_transactions_url, headers: valid_headers, as: :json
+      get v1_transactions_url, as: :json, headers: auth_header(tokens[:access])
+      body = JSON.parse(response.body).map(&:with_indifferent_access)
+
       expect(response).to be_successful
+      expected_ids = transactions_withdraw.append(transaction_deposit).map(&:id)
+      expect(body.map { |t| t[:id] }).to match_array(expected_ids)
     end
   end
 
   describe "GET /show" do
+    let!(:transaction) { create(:transaction) }
+    let(:tokens) { login(transaction.account.customer) }
+
     it "renders a successful response" do
-      transaction = Transaction.create! valid_attributes
-      get v1_transaction_url(transaction), as: :json
+      get v1_transaction_url(transaction), as: :json, headers: auth_header(tokens[:access])
+      body = JSON.parse(response.body).with_indifferent_access
       expect(response).to be_successful
+      expect(body[:id]).to eq(transaction.id)
     end
   end
 
   describe "POST /create" do
-    context "with valid parameters" do
+    let!(:account) { create(:account) }
+    let(:tokens) { login(account.customer) }
+
+    context "with valid parameters to withdraw" do
       it "creates a new Transaction" do
         expect {
           post v1_transactions_url,
-               params: { v1_transaction: valid_attributes }, headers: valid_headers, as: :json
+               params: { transaction: valid_withdraw_attributes }, headers: auth_header(tokens[:access]), as: :json
         }.to change(Transaction, :count).by(1)
       end
 
-      it "renders a JSON response with the new v1_transaction" do
+      it "renders a JSON response with the new transaction" do
         post v1_transactions_url,
-             params: { v1_transaction: valid_attributes }, headers: valid_headers, as: :json
+             params: { transaction: valid_withdraw_attributes }, headers: auth_header(tokens[:access]), as: :json
+        expect(response).to have_http_status(:created)
+        expect(response.content_type).to match(a_string_including("application/json"))
+      end
+    end
+
+    context "with valid parameters to deposit" do
+      it "creates a new Transaction" do
+        expect {
+          post v1_transactions_url,
+               params: { transaction: valid_deposit_attributes }, headers: auth_header(tokens[:access]), as: :json
+        }.to change(Transaction, :count).by(1)
+      end
+
+      it "renders a JSON response with the new transaction" do
+        post v1_transactions_url,
+             params: { transaction: valid_deposit_attributes }, headers: auth_header(tokens[:access]), as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
       end
@@ -69,59 +93,16 @@ RSpec.describe "/transactions", type: :request do
       it "does not create a new Transaction" do
         expect {
           post v1_transactions_url,
-               params: { v1_transaction: invalid_attributes }, as: :json
+               params: { transaction: invalid_attributes }, as: :json
         }.to change(Transaction, :count).by(0)
       end
 
-      it "renders a JSON response with errors for the new v1_transaction" do
+      it "renders a JSON response with errors for the new transaction" do
         post v1_transactions_url,
-             params: { v1_transaction: invalid_attributes }, headers: valid_headers, as: :json
+             params: { transaction: invalid_attributes }, headers: auth_header(tokens[:access]), as: :json
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to match(a_string_including("application/json"))
       end
-    end
-  end
-
-  describe "PATCH /update" do
-    context "with valid parameters" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
-
-      it "updates the requested v1_transaction" do
-        transaction = Transaction.create! valid_attributes
-        patch v1_transaction_url(transaction),
-              params: { transaction: invalid_attributes }, headers: valid_headers, as: :json
-        transaction.reload
-        skip("Add assertions for updated state")
-      end
-
-      it "renders a JSON response with the v1_transaction" do
-        transaction = Transaction.create! valid_attributes
-        patch v1_transaction_url(transaction),
-              params: { transaction: invalid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:ok)
-        expect(response.content_type).to eq("application/json")
-      end
-    end
-
-    context "with invalid parameters" do
-      it "renders a JSON response with errors for the v1_transaction" do
-        transaction = Transaction.create! valid_attributes
-        patch v1_transaction_url(transaction),
-              params: { transaction: invalid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq("application/json")
-      end
-    end
-  end
-
-  describe "DELETE /destroy" do
-    it "destroys the requested v1_transaction" do
-      transaction = Transaction.create! valid_attributes
-      expect {
-        delete v1_transaction_url(transaction), headers: valid_headers, as: :json
-      }.to change(Transaction, :count).by(-1)
     end
   end
 end

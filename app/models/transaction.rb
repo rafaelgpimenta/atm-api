@@ -1,7 +1,7 @@
 class Transaction < ApplicationRecord
   belongs_to :account
   before_save :save_withdraw_details, if: :withdraw?
-  enum kind: [:withdraw, :deposit]
+  enum kind: { withdraw: 0, deposit: 1 }
 
   validates :amount, :kind, presence: true
   validates :amount, numericality: { greater_than: 0 }
