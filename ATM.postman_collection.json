@@ -1,0 +1,222 @@
+{
+	"info": {
+		"_postman_id": "3a5b8cfc-6de4-487b-826b-89bec1d44a3c",
+		"name": "ATM",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sign up",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3b8bb86e-cf64-4da5-adde-aa4c310eab61",
+						"exec": [
+							"if (pm.response.code === 201) {\r",
+							"    pm.environment.set('authToken', pm.response.json().access);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cpf\": \"123\",\r\n    \"password\": \"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/sign_up",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"sign_up"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sign out",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/sign_out",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"sign_out"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sign in",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "33912efe-a34f-4673-981e-6913690777e4",
+						"exec": [
+							"if (pm.response.code === 200) {\r",
+							"    pm.environment.set('authToken', pm.response.json().access);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cpf\": \"123\",\r\n    \"password\": \"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/sign_in",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"sign_in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read account",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/v1/accounts/my",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"accounts",
+						"my"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List transactions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/v1/transactions",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read transaction",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/v1/transactions/6a77e939-ba05-46ec-9800-8feb3f3ed326",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"transactions",
+						"6a77e939-ba05-46ec-9800-8feb3f3ed326"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create transaction",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"kind\": \"withdraw\",\r\n    \"amount\": \"120\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/v1/transactions",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "9ee41e8b-2de5-4177-8b36-a3b76b19c528",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "57174bd7-e302-47b8-a2bf-7c3d49566a41",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
