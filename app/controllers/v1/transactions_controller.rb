@@ -1,9 +1,11 @@
 class V1::TransactionsController < ApplicationController
+  before_action :authorize_access_request!
   before_action :set_transaction, only: [:show, :update, :destroy]
 
   # GET /transactions
   def index
-    @transactions = Transaction.all
+    # TODO: pagination
+    @transactions = account.transactions
 
     render json: @transactions
   end
@@ -15,37 +17,35 @@ class V1::TransactionsController < ApplicationController
 
   # POST /transactions
   def create
-    @transaction = Transaction.new(transaction_params)
+    @transaction = account.transactions.build(transaction_params)
+    valid_operation = false
+    ActiveRecord::Base.transaction do
+      valid_operation = @transaction.save &&
+        account.update_balance_with_transaction(@transaction.id)
 
-    if @transaction.save
-      render json: @transaction, status: :created, location: @transaction
+      raise ActiveRecord::Rollback unless valid_operation
+    end
+
+    if valid_operation
+      render json: @transaction, status: :created
     else
       render json: @transaction.errors, status: :unprocessable_entity
     end
-  end
-
-  # PATCH/PUT /transactions/1
-  def update
-    if @transaction.update(transaction_params)
-      render json: @transaction
-    else
-      render json: @transaction.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /transactions/1
-  def destroy
-    @transaction.destroy
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_transaction
-      @transaction = Transaction.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def transaction_params
-      params.fetch(:transaction, {})
-    end
+  def account
+    @account ||= current_customer.account
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_transaction
+    @transaction = account.transactions.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def transaction_params
+    params.require(:transaction).permit(:kind, :amount)
+  end
 end

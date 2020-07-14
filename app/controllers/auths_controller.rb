@@ -1,4 +1,4 @@
-class AuthController < ApplicationController
+class AuthsController < ApplicationController
   before_action :authorize_access_request!, only: [:sign_out]
   before_action :authorize_refresh_by_access_request!, only: [:refresh]
 
@@ -8,9 +8,9 @@ class AuthController < ApplicationController
 
     if account.save
       tokens = generate_tokens(customer)
-      set_jwt_cookie(tokens)
+      # set_jwt_cookie(tokens)
 
-      render json: { csrf: tokens[:csrf] }, status: :created
+      render json: { access: tokens[:access] }, status: :created
     else
       errors = (account.customer.errors.full_messages + account.errors.full_messages).join(', ')
       render json: { error: errors }, status: :unprocessable_entity
@@ -22,8 +22,8 @@ class AuthController < ApplicationController
     return not_authorized unless customer.authenticate(params[:password])
 
     tokens = generate_tokens(customer)
-    set_jwt_cookie(tokens)
-    render json: { csrf: tokens[:csrf] }
+    # set_jwt_cookie(tokens)
+    render json: { access: tokens[:access] }
   end
 
   def sign_out
@@ -38,21 +38,21 @@ class AuthController < ApplicationController
       # here goes malicious activity alert
       raise JWTSessions::Errors::Unauthorized, "Refresh action is performed before the expiration of the access token."
     end
-    set_jwt_cookie(tokens)
+    # set_jwt_cookie(tokens)
 
-    render json: { csrf: tokens[:csrf] }
+    render json: { access: tokens[:access] }
   end
 
   private
 
-  def set_jwt_cookie(tokens)
-    response.set_cookie(
-      JWTSessions.access_cookie,
-      value: tokens[:access],
-      httponly: true,
-      secure: Rails.env.production?,
-    )
-  end
+  # def set_jwt_cookie(tokens)
+  #   response.set_cookie(
+  #     JWTSessions.access_cookie,
+  #     value: tokens[:access],
+  #     httponly: true,
+  #     secure: Rails.env.production?,
+  #   )
+  # end
 
   def generate_tokens(customer)
     payload = { customer_id: customer.id }

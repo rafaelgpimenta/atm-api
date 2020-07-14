@@ -34,9 +34,10 @@ ActiveRecord::Schema.define(version: 2020_07_13_152243) do
   end
 
   create_table "transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.decimal "amount"
+    t.decimal "amount", null: false
     t.uuid "account_id", null: false
-    t.integer "type"
+    t.integer "kind", null: false
+    t.jsonb "details"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["account_id"], name: "index_transactions_on_account_id"
