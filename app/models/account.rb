@@ -1,6 +1,7 @@
 class Account < ApplicationRecord
   belongs_to :customer
   has_many :transactions, dependent: :destroy
+  validates :type, :balance, presence: true
 
   def update_balance_with_transaction(transaction_id)
     transaction = transactions.find(transaction_id)
