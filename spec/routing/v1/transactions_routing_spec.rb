@@ -14,17 +14,5 @@ RSpec.describe V1::TransactionsController, type: :routing do
     it "routes to #create" do
       expect(post: "/v1/transactions").to route_to("v1/transactions#create")
     end
-
-    it "routes to #update via PUT" do
-      expect(put: "/v1/transactions/1").to route_to("v1/transactions#update", id: "1")
-    end
-
-    it "routes to #update via PATCH" do
-      expect(patch: "/v1/transactions/1").to route_to("v1/transactions#update", id: "1")
-    end
-
-    it "routes to #destroy" do
-      expect(delete: "/v1/transactions/1").to route_to("v1/transactions#destroy", id: "1")
-    end
   end
 end
