@@ -8,7 +8,7 @@ Rails.application.routes.draw do
     resources :transactions, except: [:update, :destroy]
   end
 
-  resource :auth, only: [] do
+  resource :auth, path: '', only: [] do
     post 'sign_up'
     post 'sign_in'
     post 'sign_out'
