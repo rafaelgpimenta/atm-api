@@ -33,6 +33,10 @@ group :development, :test do
   gem 'pry', '~> 0.13.1'
 end
 
+group :test do
+  gem 'simplecov', require: false
+end
+
 group :development do
 end
 
