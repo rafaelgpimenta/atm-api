@@ -1,11 +1,12 @@
 class Transaction < ApplicationRecord
   belongs_to :account
+
+  validates_presence_of :amount, :kind
+  validates_numericality_of :amount, greater_than: 0
+  validate :correct_amount, on: :create, if: :withdraw?
+
   before_save :save_withdraw_details, if: :withdraw?
   enum kind: { withdraw: 0, deposit: 1 }
-
-  validates :amount, :kind, presence: true
-  validates :amount, numericality: { greater_than: 0 }
-  validate :correct_amount, on: :create, if: :withdraw?
 
   VALID_VALUES = [100, 50, 20, 10]
 

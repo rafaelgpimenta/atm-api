@@ -59,10 +59,10 @@ RSpec.describe "/auths", type: :request do
   describe "POST #sign_in" do
     let!(:customer) { create(:customer) }
     let(:valid_params) do
-      { cpf: '12345', password: 'senha' }
+      { cpf: 'abc12345', password: 'senha' }
     end
     let(:invalid_params) do
-      { cpf: '1234', password: 'senha' }
+      { cpf: 'abc1234', password: 'senha' }
     end
 
     context "with valid parameters" do
