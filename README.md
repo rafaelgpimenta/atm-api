@@ -52,7 +52,7 @@ docker-compose run api rails db:create db:migrate
 
 Depois basta executar `docker-compose up` para expor a aplicação no endereço *localhost:3000*
 
-Com a aplicação funcionando, vá até o Postman, selecione a opção de importar e busque pelos arquivos *ATM API (dev).postman_environment.json* e *ATM.postman_collection.json* na raiz deste projeto. Em seguida não esqueça de [trocar o ambiente](learning.postman.com/docs/sending-requests/managing-environments). Por fim, envie as requisições e observe as respostas fornecidas em JSON.
+Com a aplicação funcionando, vá até o Postman, [selecione a opção de importar](learning.postman.com/docs/getting-started/importing-and-exporting-data) e busque pelos arquivos *ATM API (dev).postman_environment.json* e *ATM.postman_collection.json* na raiz deste projeto. Em seguida não esqueça de [trocar o ambiente](learning.postman.com/docs/sending-requests/managing-environments). Por fim, envie as requisições e observe as respostas fornecidas em JSON.
 
 ## Executar testes unitários
 
