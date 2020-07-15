@@ -1,4 +1,5 @@
 # ATM-API
+[![Build Status](https://travis-ci.org/rafaelgpimenta/atm-api.svg?branch=master)](https://travis-ci.org/rafaelgpimenta/atm-api)
 
 A aplicação propõe criar uma API, utilizando o padrão JWT, para reproduzir as ações de um caixa eletrônico inspirado pelo desafio [dojopuzzles.com/problemas/exibe/caixa-eletronico](dojopuzzles.com/problemas/exibe/caixa-eletronico).
 

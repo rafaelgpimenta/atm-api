@@ -6,7 +6,7 @@ class ApplicationController < ActionController::API
   private
 
   def current_customer
-    @current_customer ||= Customer.find(payload['customer_id'])
+    @current_customer ||= Customer.includes(:account).find(payload['customer_id'])
   end
 
   def not_authorized
