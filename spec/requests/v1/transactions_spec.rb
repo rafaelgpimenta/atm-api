@@ -16,7 +16,7 @@ RSpec.describe "/transactions", type: :request do
   # This should return the minimal set of attributes required to create a valid
   # Transaction. As you add validations to Transaction, be sure to
   # adjust the attributes here as well.
-  let(:valid_withdraw_attributes) { attributes_for :transaction }
+  let(:valid_withdraw_attributes) { attributes_for :transaction, amount: 260 }
   let(:valid_deposit_attributes) { attributes_for :transaction, :deposit }
 
   let(:invalid_attributes) { attributes_for :transaction, amount: 11 }
@@ -68,8 +68,10 @@ RSpec.describe "/transactions", type: :request do
       it "renders a JSON response with the new transaction" do
         post v1_transactions_url,
              params: { transaction: valid_withdraw_attributes }, headers: auth_header(tokens[:access]), as: :json
+        body = JSON.parse(response.body).with_indifferent_access
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
+        expect(body[:details][:printed_value]).to eq({ "100" => 2, "50" => 1, "10" => 1 })
       end
     end
 
@@ -84,8 +86,10 @@ RSpec.describe "/transactions", type: :request do
       it "renders a JSON response with the new transaction" do
         post v1_transactions_url,
              params: { transaction: valid_deposit_attributes }, headers: auth_header(tokens[:access]), as: :json
+        body = JSON.parse(response.body).with_indifferent_access
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
+        expect(body[:details]).to be_nil
       end
     end
 
