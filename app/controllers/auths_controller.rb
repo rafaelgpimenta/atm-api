@@ -3,16 +3,10 @@ class AuthsController < ApplicationController
   before_action :authorize_refresh_by_access_request!, only: [:refresh]
 
   def sign_up
-    valid_operation = false
     customer = Customer.new(customer_params)
     account = CheckingAccount.new(customer: customer)
 
-    ActiveRecord::Base.transaction do
-      valid_operation = customer.save && account.save
-      raise ActiveRecord::Rollback unless valid_operation
-    end
-
-    if valid_operation
+    if create_account_from_instances(customer, account)
       tokens = generate_tokens(customer)
       render json: { access: tokens[:access] }, status: :created
     else
@@ -48,6 +42,16 @@ class AuthsController < ApplicationController
   end
 
   private
+
+  def create_account_from_instances(customer, account)
+    ActiveRecord::Base.transaction do
+      if customer.save && account.save
+        true
+      else
+        raise ActiveRecord::Rollback
+      end
+    end
+  end
 
   def generate_tokens(customer)
     payload = { customer_id: customer.id }

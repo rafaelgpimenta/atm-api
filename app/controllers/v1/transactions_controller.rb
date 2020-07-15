@@ -18,15 +18,8 @@ class V1::TransactionsController < ApplicationController
   # POST /transactions
   def create
     @transaction = current_customer.transactions.build(transaction_params)
-    valid_operation = false
-    ActiveRecord::Base.transaction do
-      valid_operation = @transaction.save &&
-        current_customer.account.update_balance_with_transaction(@transaction.id)
 
-      raise ActiveRecord::Rollback unless valid_operation
-    end
-
-    if valid_operation
+    if create_transaction
       render json: @transaction, status: :created
     else
       render json: @transaction.errors, status: :unprocessable_entity
@@ -34,6 +27,20 @@ class V1::TransactionsController < ApplicationController
   end
 
   private
+
+  def create_transaction
+    ActiveRecord::Base.transaction do
+      if @transaction.save && update_account_balance
+        true
+      else
+        raise ActiveRecord::Rollback
+      end
+    end
+  end
+
+  def update_account_balance
+    current_customer.account.update_balance_with_transaction(@transaction.id)
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_transaction
