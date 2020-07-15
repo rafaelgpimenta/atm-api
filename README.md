@@ -7,7 +7,7 @@ A aplicação propõe criar uma API, utilizando o padrão JWT, para reproduzir a
 As seguintes rotas estão disponíveis:
 URL / ENDPOINT       |    VERBO   |    DESCRIÇÃO
 -------------------- | ---------- | --------------
-/sign_up             |    POST    | Cria um novo cliente com sua respectiva conta bancária e acessa o caixa eletrônico. Deve-se fornecer os campos *cpf* e *password* ao corpo da requisição
+/sign_up             |    POST    | Cria um novo cliente com sua respectiva conta bancária e acessa o caixa eletrônico. Deve-se fornecer os campos *cpf*, *password* e *password_confirmation* ao corpo da requisição
 /sign_in             |    POST    | Acessa o caixa eletrônico. Deve-se fornecer os campos *cpf* e *password* à requisição
 /sign_out            |    POST    | Desconecta do caixa eletrônico
 /refresh             |    POST    | Devolve acesso ao caixa eletronico após token ter expirado
