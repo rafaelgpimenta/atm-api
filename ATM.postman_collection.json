@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3a5b8cfc-6de4-487b-826b-89bec1d44a3c",
+		"_postman_id": "d159dceb-0489-4eb8-b0c4-e49a894906c0",
 		"name": "ATM",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,7 +11,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "3b8bb86e-cf64-4da5-adde-aa4c310eab61",
+						"id": "1350d4c5-63b1-41bd-aa68-de213b684b45",
 						"exec": [
 							"if (pm.response.code === 201) {\r",
 							"    pm.environment.set('authToken', pm.response.json().access);\r",
@@ -26,7 +26,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"cpf\": \"123\",\r\n    \"password\": \"123\"\r\n}",
+					"raw": "{\r\n    \"cpf\": \"000.000.000-00\",\r\n    \"password\": \"123\",\r\n    \"password_confirmation\": \"123\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -68,7 +68,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "33912efe-a34f-4673-981e-6913690777e4",
+						"id": "f1c197ee-2c9e-4a4d-80af-9bb23c84efb0",
 						"exec": [
 							"if (pm.response.code === 200) {\r",
 							"    pm.environment.set('authToken', pm.response.json().access);\r",
@@ -83,7 +83,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"cpf\": \"123\",\r\n    \"password\": \"123\"\r\n}",
+					"raw": "{\r\n    \"cpf\": \"000.000.000-00\",\r\n    \"password\": \"123\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -200,7 +200,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "9ee41e8b-2de5-4177-8b36-a3b76b19c528",
+				"id": "9efd2a22-4a23-4b8f-b64c-37b569de195e",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -210,7 +210,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "57174bd7-e302-47b8-a2bf-7c3d49566a41",
+				"id": "be7398b1-2fcf-4dd9-a4bd-95904237366d",
 				"type": "text/javascript",
 				"exec": [
 					""
