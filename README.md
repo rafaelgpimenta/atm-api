@@ -1,6 +1,7 @@
 # ATM-API
 [![Build Status](https://travis-ci.org/rafaelgpimenta/atm-api.svg?branch=master)](https://travis-ci.org/rafaelgpimenta/atm-api)
 [![Maintainability](https://api.codeclimate.com/v1/badges/af3f4100439c5b6fcfc0/maintainability)](https://codeclimate.com/github/rafaelgpimenta/atm-api/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/af3f4100439c5b6fcfc0/test_coverage)](https://codeclimate.com/github/rafaelgpimenta/atm-api/test_coverage)
 
 A aplicação propõe criar uma API, utilizando o padrão JWT, para reproduzir as ações de um caixa eletrônico inspirado pelo desafio [dojopuzzles.com/problemas/exibe/caixa-eletronico](dojopuzzles.com/problemas/exibe/caixa-eletronico).
 
